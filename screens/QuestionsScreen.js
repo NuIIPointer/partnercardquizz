@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Text, Layout } from '@ui-kitten/components';
 import { t } from '../utils';
 import Screen from './Screen';
@@ -7,8 +7,29 @@ import { useFirebaseDB } from '../providers/FirebaseDBProvider';
 import QuestionCard from '../components/questions/QuestionCard/QuestionCard';
 
 export default function QuestionsScreen() {
-  const { getQuestions } = useFirebaseDB();
-  console.log('questionsHook', getQuestions());
+  const { getQuestions, getDocument } = useFirebaseDB();
+  const [questionList, setQuestionList] = useState([]);
+  const questionsRendered = useMemo(() => {
+    const questionsDom = questionList.map(singleQuestion => {
+      const category = getDocument(singleQuestion.categories[0]);
+      console.log('category', category);
+      return <QuestionCard status="danger" text={singleQuestion.question} />;
+    });
+
+    return questionsDom;
+  }, [getDocument, questionList]);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    const call = async () => {
+      const questions = await getQuestions();
+      console.log('questions', questions);
+      setQuestionList(questions);
+    };
+
+    call();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Screen
@@ -31,8 +52,7 @@ export default function QuestionsScreen() {
           gap: '8px',
         }}
       >
-        <QuestionCard />
-        <QuestionCard status="danger" text="My Foo" />
+        {questionsRendered}
       </Layout>
     </Screen>
   );
