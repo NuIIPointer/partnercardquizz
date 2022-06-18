@@ -5,7 +5,7 @@ import firebase from '../config/firebase';
 
 export const AuthContext = createContext({});
 
-const auth = getAuth(firebase);
+export const auth = getAuth(firebase);
 
 export function AuthProvider(props) {
   const [user, setUser] = useState(null);

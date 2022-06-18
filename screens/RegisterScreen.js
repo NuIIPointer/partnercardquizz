@@ -3,8 +3,9 @@ import { Formik } from 'formik';
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import * as Yup from 'yup';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import TextField from '../components/form/TextField';
-import { AuthService } from '../providers/AuthProvider';
+import { auth } from '../providers/AuthProvider';
 import { useModal } from '../providers/ModalProvider';
 import { t } from '../utils';
 import Screen from './Screen';
@@ -31,7 +32,8 @@ export default function RegisterScreen() {
   const { showModal } = useModal();
   const handleFormSubmit = async ({ displayName, email, password }) => {
     try {
-      const result = await AuthService.createUserWithEmailAndPassword(
+      const result = await createUserWithEmailAndPassword(
+        auth,
         email,
         password,
       );

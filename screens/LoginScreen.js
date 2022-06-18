@@ -3,8 +3,9 @@ import { Formik } from 'formik';
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import * as Yup from 'yup';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import TextField from '../components/form/TextField';
-import { AuthService } from '../providers/AuthProvider';
+import { auth } from '../providers/AuthProvider';
 import { useModal } from '../providers/ModalProvider';
 import { t } from '../utils';
 import Screen from './Screen';
@@ -26,7 +27,7 @@ export default function LoginScreen() {
   const { showModal } = useModal();
   const handleFormSubmit = async ({ email, password }) => {
     try {
-      await AuthService.signInWithEmailAndPassword(email, password);
+      await signInWithEmailAndPassword(auth, email, password);
     } catch ({ message }) {
       showModal(message);
     }

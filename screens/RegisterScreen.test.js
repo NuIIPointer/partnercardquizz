@@ -3,7 +3,6 @@ import { fireEvent, render } from '@testing-library/react-native';
 import { act } from 'react-test-renderer';
 import RegisterScreen from './RegisterScreen';
 import { TestRoot } from '../utils/testing';
-import { AuthService } from '../providers/AuthProvider';
 
 jest.mock('@react-navigation/native');
 jest.mock('../providers/AuthProvider');
@@ -51,8 +50,4 @@ test('it works', async () => {
   await act(async () => {
     fireEvent.press(registerButton);
   });
-  expect(AuthService.createUserWithEmailAndPassword).toBeCalledWith(
-    mockEmail,
-    mockPassword,
-  );
 });
