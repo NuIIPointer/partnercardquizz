@@ -14,7 +14,26 @@ export function FirebaseDBProvider(props) {
     const questionSnapshot = await getDocs(questionsCol);
     console.log('questionSnapshot', questionSnapshot);
     const questionList = questionSnapshot.docs.map(doc => doc.data());
-    return questionList;
+
+    const questionsFetchedCategories = await Promise.all(
+      questionList.map(async sinlgeQuestion => {
+        const categoriesReferences = sinlgeQuestion.categories;
+        const categoriesPromises = categoriesReferences.map(
+          async singleCategory => {
+            const categoryDoc = await getDoc(singleCategory);
+            return categoryDoc.data();
+          },
+        );
+        const fetchedCats = await Promise.all(categoriesPromises);
+
+        return {
+          ...sinlgeQuestion,
+          categories: fetchedCats,
+        };
+      }),
+    );
+
+    return questionsFetchedCategories;
   }, []);
 
   const getQuestionTypes = useCallback(async () => {

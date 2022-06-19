@@ -7,17 +7,29 @@ import { useFirebaseDB } from '../providers/FirebaseDBProvider';
 import QuestionCard from '../components/questions/QuestionCard/QuestionCard';
 
 export default function QuestionsScreen() {
-  const { getQuestions, getDocument } = useFirebaseDB();
+  const { getQuestions } = useFirebaseDB();
   const [questionList, setQuestionList] = useState([]);
   const questionsRendered = useMemo(() => {
     const questionsDom = questionList.map(singleQuestion => {
-      const category = getDocument(singleQuestion.categories[0]);
-      console.log('category', category);
-      return <QuestionCard status="danger" text={singleQuestion.question} />;
+      const categoryTitles = singleQuestion.categories.map(
+        category => category.title[t('languageKey')],
+      );
+      const { color } = singleQuestion.categories[0];
+      const questionTitle = singleQuestion.question;
+
+      return (
+        <QuestionCard
+          key={questionTitle}
+          status={color}
+          title={questionTitle}
+          text="Lorem Ipsum"
+          categories={categoryTitles}
+        />
+      );
     });
 
     return questionsDom;
-  }, [getDocument, questionList]);
+  }, [questionList]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
@@ -46,10 +58,13 @@ export default function QuestionsScreen() {
           flex: 1,
           flexDirection: 'row',
           justifyContent: 'center',
-          alignItems: 'center',
+          alignItems: 'flex-end',
+          alignContent: 'flex-end',
+          flexWrap: 'wrap',
           width: '100%',
           backgroundColor: 'transparent',
           gap: '8px',
+          marginBottom: '32px',
         }}
       >
         {questionsRendered}

@@ -1,15 +1,16 @@
 import i18n from 'i18n-js';
 import * as Localization from 'expo-localization';
 
-import en from '../locales/en_US.json';
-import zh from '../locales/zh_CN.json';
+import en from '../locales/en_US';
+import de from '../locales/de_DE';
 
-i18n.translations = { en, zh };
+i18n.translations = { en, de };
 
 let deviceLocale = Localization.locale;
 
 // simplify locales by only using the lang code
 if (deviceLocale.includes('-')) {
+  // eslint-disable-next-line prefer-destructuring
   deviceLocale = deviceLocale.split('-')[0];
 }
 
